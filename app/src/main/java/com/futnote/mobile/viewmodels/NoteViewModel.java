@@ -1,10 +1,13 @@
-package com.futnote.mobile.components;
+package com.futnote.mobile.viewmodels;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.futnote.mobile.models.Note;
+import com.futnote.mobile.models.NoteRepository;
 
 import java.util.List;
 

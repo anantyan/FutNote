@@ -1,9 +1,13 @@
-package com.futnote.mobile.components;
+package com.futnote.mobile.models;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+
+import com.futnote.mobile.models.Note;
+import com.futnote.mobile.room.NoteDao;
+import com.futnote.mobile.room.NoteDatabase;
 
 import java.util.List;
 

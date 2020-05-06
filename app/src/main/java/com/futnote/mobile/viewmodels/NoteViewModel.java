@@ -34,10 +34,6 @@ public class NoteViewModel extends AndroidViewModel {
         noteRepository.delete(note);
     }
 
-    public void deleteAll() {
-        noteRepository.deleteAll();
-    }
-
     public LiveData<List<Note>> select() {
         return records;
     }

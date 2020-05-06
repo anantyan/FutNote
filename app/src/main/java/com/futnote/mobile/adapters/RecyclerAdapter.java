@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.futnote.mobile.R;
@@ -19,9 +20,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private List<Note> result = new ArrayList<>();
 
+    public void setResult(List<Note> result) {
+        this.result = result;
+        notifyDataSetChanged();
+    }
+
+    public Note setNote(int position) {
+        return result.get(position);
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtJudul, txtDeskripsi, txtPrioritas;
+        private RecyclerView recyclerView;
 
         ViewHolder(ListMainBinding binding) {
             super(binding.getRoot());
@@ -49,10 +60,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public int getItemCount() {
         return result.size();
-    }
-
-    public void setResult(List<Note> result) {
-        this.result = result;
-        notifyDataSetChanged();
     }
 }

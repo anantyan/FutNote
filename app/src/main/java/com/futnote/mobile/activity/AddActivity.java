@@ -16,6 +16,8 @@ public class AddActivity extends AppCompatActivity {
 
     private ActivityAddBinding binding;
     private View view;
+    private Intent intent;
+    public static final String EXTRA_ID = "ADD_ID"; // khusus jika edit data
     public static final String EXTRA_JUDUL = "ADD_JUDUL";
     public static final String EXTRA_DESKRIPSI = "ADD_DESKRIPSI";
     public static final String EXTRA_PRIORITAS = "ADD_PRIORITAS";
@@ -31,15 +33,25 @@ public class AddActivity extends AppCompatActivity {
     }
 
     private void funData() {
+        // set intent
+        intent = getIntent();
+
         // initialisasi actionBar
         if(getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Add FutNote");
+            if(intent.hasExtra(EXTRA_ID)) {
+                getSupportActionBar().setTitle("Edit FutNote"); // khusus jika edit data
+            } else {
+                getSupportActionBar().setTitle("Add FutNote");
+            }
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         // set default value
         binding.prioritas.setMinValue(1);
         binding.prioritas.setMaxValue(10);
+        binding.judul.setText(intent.getStringExtra(EXTRA_JUDUL));
+        binding.deskripsi.setText(intent.getStringExtra(EXTRA_DESKRIPSI));
+        binding.prioritas.setValue(intent.getIntExtra(EXTRA_PRIORITAS, 1));
     }
 
     @Override
@@ -59,6 +71,7 @@ public class AddActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(id == R.id.action_save) {
             // inisialisasi
+            int dataId = getIntent().getIntExtra(EXTRA_ID, -1); // khusus jika edit data
             String judul = binding.judul.getText().toString().trim();
             String deskripsi = binding.deskripsi.getText().toString().trim();
             int prioritas = binding.prioritas.getValue();
@@ -71,6 +84,11 @@ public class AddActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_JUDUL, judul);
                 intent.putExtra(EXTRA_DESKRIPSI, deskripsi);
                 intent.putExtra(EXTRA_PRIORITAS, prioritas);
+
+                if(dataId != -1) {
+                    intent.putExtra(EXTRA_ID, dataId);
+                }
+
                 setResult(RESULT_OK, intent);
                 finish();
             }

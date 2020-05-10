@@ -9,7 +9,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.futnote.mobile.models.Note;
+import com.futnote.mobile.model.Note;
 
 @Database(entities = {Note.class}, version = 1)
 public abstract class NoteDatabase extends RoomDatabase {

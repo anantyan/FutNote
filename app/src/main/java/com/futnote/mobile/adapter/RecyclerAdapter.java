@@ -1,4 +1,4 @@
-package com.futnote.mobile.adapters;
+package com.futnote.mobile.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,39 +6,50 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.futnote.mobile.R;
 import com.futnote.mobile.databinding.ListMainBinding;
-import com.futnote.mobile.models.Note;
+import com.futnote.mobile.listener.RecyclerListener;
+import com.futnote.mobile.model.Note;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    private List<Note> result = new ArrayList<>();
+    private static List<Note> result = new ArrayList<>();
+    private RecyclerListener listener;
 
-    public void setResult(List<Note> result) {
+    public void setOnResult(List<Note> result) {
         this.result = result;
         notifyDataSetChanged();
     }
 
-    public Note setNote(int position) {
+    public void setOnClick(RecyclerListener listener) {
+        this.listener = listener;
+    }
+
+    public Note setOnSwipe(int position) {
         return result.get(position);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView txtJudul, txtDeskripsi, txtPrioritas;
-        private RecyclerView recyclerView;
 
-        ViewHolder(ListMainBinding binding) {
+        ViewHolder(ListMainBinding binding, final RecyclerListener listener) {
             super(binding.getRoot());
             txtJudul = binding.judul;
             txtDeskripsi = binding.deskripsi;
             txtPrioritas = binding.prioritas;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null) {
+                        listener.onClick(result.get(getAdapterPosition()));
+                    }
+                }
+            });
         }
     }
 
@@ -46,7 +57,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ListMainBinding binding = ListMainBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new ViewHolder(binding);
+        return new ViewHolder(binding, listener);
     }
 
     @Override

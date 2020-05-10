@@ -1,4 +1,4 @@
-package com.futnote.mobile.models
+package com.futnote.mobile.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

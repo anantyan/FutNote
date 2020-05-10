@@ -19,14 +19,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.futnote.mobile.R;
-import com.futnote.mobile.adapters.RecyclerAdapter;
+import com.futnote.mobile.adapter.RecyclerAdapter;
 import com.futnote.mobile.databinding.ActivityMainBinding;
-import com.futnote.mobile.models.Note;
-import com.futnote.mobile.viewmodels.NoteViewModel;
+import com.futnote.mobile.listener.RecyclerListener;
+import com.futnote.mobile.model.Note;
+import com.futnote.mobile.viewmodel.NoteViewModel;
 
 import java.util.List;
 
 import static com.futnote.mobile.activity.AddActivity.EXTRA_DESKRIPSI;
+import static com.futnote.mobile.activity.AddActivity.EXTRA_ID;
 import static com.futnote.mobile.activity.AddActivity.EXTRA_JUDUL;
 import static com.futnote.mobile.activity.AddActivity.EXTRA_PRIORITAS;
 
@@ -65,6 +67,17 @@ public class MainActivity extends AppCompatActivity {
 
         // inisialisasi recyclerAdapter
         recyclerAdapter = new RecyclerAdapter();
+        recyclerAdapter.setOnClick(new RecyclerListener() {
+            @Override
+            public void onClick(Note note) {
+                Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                intent.putExtra(EXTRA_ID, note.getId());
+                intent.putExtra(EXTRA_JUDUL, note.getJudul());
+                intent.putExtra(EXTRA_DESKRIPSI, note.getDeskripsi());
+                intent.putExtra(EXTRA_PRIORITAS, note.getPrioritas());
+                startActivityForResult(intent, 2);
+            }
+        });
 
         // inisialisasi swipeAdapter
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -75,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                noteViewModel.delete(recyclerAdapter.setNote(viewHolder.getAdapterPosition()));
+                noteViewModel.delete(recyclerAdapter.setOnSwipe(viewHolder.getAdapterPosition()));
                 Toast.makeText(MainActivity.this, "Note as deleted!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -86,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         noteViewModel.select().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
-                recyclerAdapter.setResult(notes);
+                recyclerAdapter.setOnResult(notes);
             }
         });
 
@@ -96,6 +109,17 @@ public class MainActivity extends AppCompatActivity {
         binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, LinearLayoutManager.VERTICAL));
         binding.recyclerView.setAdapter(recyclerAdapter);
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 5 && binding.floatingActionButton.getVisibility() == View.VISIBLE) {
+                    binding.floatingActionButton.hide();
+                } else if (dy < 5 && binding.floatingActionButton.getVisibility() != View.VISIBLE) {
+                    binding.floatingActionButton.show();
+                }
+            }
+        });
     }
 
     @Override
@@ -124,6 +148,21 @@ public class MainActivity extends AppCompatActivity {
 
             Note note = new Note(judul, deskripsi, prioritas);
             noteViewModel.insert(note);
+
+            Toast.makeText(this, "Note an saved!", Toast.LENGTH_SHORT).show();
+        } else if(requestCode == 2 && resultCode == RESULT_OK) {
+            int id = data.getIntExtra(EXTRA_ID, -1);
+            String judul = data.getStringExtra(EXTRA_JUDUL).trim();
+            String deskripsi = data.getStringExtra(EXTRA_DESKRIPSI).trim();
+            int prioritas = data.getIntExtra(EXTRA_PRIORITAS,1);
+
+            if(id == -1) {
+                Toast.makeText(this, "Note an saved!", Toast.LENGTH_SHORT).show();
+            }
+
+            Note note = new Note(judul, deskripsi, prioritas);
+            note.setId(id);
+            noteViewModel.update(note);
 
             Toast.makeText(this, "Note an saved!", Toast.LENGTH_SHORT).show();
         }

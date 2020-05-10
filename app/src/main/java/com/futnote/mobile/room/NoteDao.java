@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.futnote.mobile.models.Note;
+import com.futnote.mobile.model.Note;
 
 import java.util.List;
 

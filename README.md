@@ -8,4 +8,4 @@ Membuat sebuah contoh projek menggunakan Android Java dengan metode desain patte
 
 ![alt_text](https://raw.githubusercontent.com/anantyan/FutNote/Kotlin/Screenshot_2020-05-13-21-06-49-364_com.futnote.mobile.png)
 
-![alt_text](https://raw.githubusercontent.com/anantyan/FutNote/Kotlin/Screenshot_2020-05-13-21-06-49-364_com.futnote.mobile.png)
+![alt_text](https://raw.githubusercontent.com/anantyan/FutNote/Kotlin/Screenshot_2020-05-13-21-06-57-478_com.futnote.mobile.png)
